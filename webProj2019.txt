@@ -1,0 +1,325 @@
+COS  457                          Database Systems
+
+Prof. Briggs                      Web Project
+
+Due: 12/14/19 @ 8 AM
+
+This assignment is worth 12 points of your final grade.
+
+For this project you are to implement a web application that allows the
+user to query the  database and display the results of the query in  a
+table on an html page.
+
+You must deploy your application on your public_www directory on our
+Unix lan so I can access it conveniently and you must use a Java based
+solution(not PHP or some other language) so I can read your source code.
+
+You will need to write minimallly two pages, an entry html 
+page that gets the query parameter values and submits them to a JSP page that
+generates the response page and also provides a link back to the entry page.
+
+The input is 
+
+1. two strings, sLo and sHi to specify a range of senator names
+2. two strings, cLo and cHi to specify a range corporation names
+3. two dates, dLo and dHi to specify a range of dates
+
+The result should be a table with columns with all quadruples
+
+(cname, sname, contribCount, contribSum)
+
+with duplicates eliminated and ordered by (cname, sname)
+
+where
+
+1. cname names a corporation and cLo <= cname <= cHi
+2. sname names a senator and sLo <= sname <= sHi
+3. contribCount is the count of all contributes events(rows)
+   from cname to sname with dLo <= cdate <= dHi, which could
+   be 0 
+4. contribSum is the sum of amt values for contributes events
+   (rows) from cname to sname such that dLo <= cdate <= cHi,
+   which should be 0 if there were no contributes rows from
+   cname to sname in that date range.
+  
+You must use a PreparedStatement taking those six parameters, whether you
+use a pure servlet, a scriptlet JSP, or an action element JSP page.
+You must use one of those three variations of Java.
+
+Apart from the correctness of the query, it is important that
+you do the following error checking on the server side and
+for each error situation provide the appropriate message.  I will test your
+programs on each of these errors, and if the response is not
+as requested, you will be penalized.  
+
+WARNING: I will test that you are validating the input on the server
+side.  You do not need to do it on the client side, and only doing it
+there is in effect the same as not doing it at all.  Security is important
+and for this reason there is also a very heavy penalty for not
+using a PreparedStatement.
+
+I. The string inputs, sLo and sHi, should each one lead to one
+   of the following messages.  You should match these error messages
+   exactly.
+  
+
+A. if not present in the request,
+
+(sLo) Low limit of the senator name range is missing.
+
+(sHi) High limit of the senator name range is missing.
+
+B. If present, but is the empty string or only white space
+   (note, this is different from the previous)
+
+(sLo) Low limit of the senator name range is empty.
+
+(sHi) High limit of the senator name range is empty.
+
+C. if present, but has non-letter characters(note, this 
+   includes leading, trailing, or embedded whitespace,
+   as in "  Cohen", "Cohen   ", "C  ohen")
+
+(sLo) Low limit of the senator name range has non-letter characters.
+
+(sHi) High limit of the senator name range has non-letter characters.
+
+D. if both present, not all white space, and all letters, 
+   but sHi < sLo,
+
+Empty senator name range.
+
+E. Otherwise, no error message for the senator name input values,
+   which is when both present, both are nonempty, both consist
+   only of letters and sL <= sHi as strings
+
+Don't worry about the cases of the letters.  I'm not sure what postgresql is
+doing because
+
+'a' <= 'A' and 'A' <= 'z' and 'z' <= 'Z'
+
+evaluates to true in SQL, which would not be the case in Java. Do
+the string comparison tests with the compareTo method.
+
+II. The string inputs, cLo and cHi, should each one lead to one
+   of the following messages.  You should match these error messages
+   exactly.
+
+A. if not present in the request,
+
+(cLo) Low limit of the corporation name range is missing.
+
+(cHi) High limit of the corporation name range is missing.
+
+B. If present, but the empty string or only white space
+   or has non-white space characters, but has leading or
+   trailing white space(note, this is different from the
+   previous; " Spacely Sprockets" and "Spacely Sprockets ",
+   are invalid, but "Spacely   Sprockets" is acceptable)
+
+(cLo) Low limit of the corporation name range is wrong format.
+
+(cHi) High limit of the corporation name range is wrong format.
+
+C. if both present and not all white space, but cHi < cLo,
+
+Empty corporation name range.
+
+D. Otherwise, no error message for the corporation name input values,
+   which is when both present, both are nonempty, both contain
+   some non-whitespace characters but no leading or trailing
+   whitespace characters and cLo <= cHi as strings
+
+III. The two date inputs, dLo and dHi have these tests and
+   messages.
+
+A. if not present in the request,
+
+(dLo) Low limit of the date range is missing.
+
+(dHi) High limit of the date range is missing.
+
+B. If present, but not of the format  yyyy-m?m-d?d
+   where the y's, m's and d's are decimal digits
+   and the ? is a postfix operator indicating an optional
+   character 
+
+(dLo) Low limit of the date range is of the wrong format.
+
+(dHi) High limit of the date range is of the wrong format.
+
+This includes the empty string case.
+
+C. If present, and of the right format, but not a  legitimate
+    date, that is, 
+
+    yyyy is 0000 or
+
+    m?m does not represent one of the month numbers 1 through 12 or
+
+    d?d does not represent one of the day numbers 1 through 31 or
+
+    d?d is not in range for that month and year
+
+(dLo) Low limit of the date range is not a valid date.
+
+(dHi) High limit of the date range is not a valid date.
+
+D. If both present, right format, and valid dates, but dHi < dLo
+   as dates
+
+Empty date range.
+
+E. Otherwise, both present, both of the right pattern, both
+   valid dates, and dLo <= dHi as dates, so no error message.
+
+
+If any of the four inputs produces an error message, then
+the query is not executed.   The program should check every
+input value and if that input is not legit, it should print
+out the appropriate error message for it.  It should only
+test for the range if both the input values for that range
+are legit.  It should only execute the query if all the
+input values are legit and all the ranges are non-empty.
+
+Each one might be invalid independently of the others, and 
+all invalidities  that are present should produce error 
+messages.  For example, for the sLo and sHi inputs, the 
+following combinations are possible (- means valid; the 
+letters indicate the error) and distinct
+
+sLo      sHi
+A        A
+A        B
+A        C
+A        -
+B        A
+B        B
+B        C
+B        -
+C        A
+C        B
+C        C
+C        -
+-        A
+-        B
+-        C
+-        -   sHi < sLo (D in the list)
+-        -   sLo <= sHi which means the senator names
+             are fine
+
+Each of these leads to different error messages; only the last
+does not produce an error message for the senator names.
+That is 17 distinct possibilities.
+
+The corporation names have 10 possibilities, and the dates
+have 17, so there are
+
+17 * 10 * 17 = 2890 different combinations, only one of which
+leads to the query being executed.
+
+Of course, there are fairly efficient ways of covering these 
+possibilities.  For example, if you have
+
+String sLoError;
+
+you can assign it any of the three error messages or null if sLo is 
+correct, do something like that for sHi, and if both are null,
+then test for sLo <= sHi.  (Of course, you have to use compareTo in
+Java to compare strings.)  If you do these in if-else statement
+
+sLoError = null;
+
+if (sLo not present) 
+   sLoError = ...;
+else if (sLo all ws)
+   sLoError = ...;
+else if (sLo has non letter)
+   sLoError = ...;
+
+sHiError = null;
+
+// similar if for sHi
+
+senRangeError = null;
+
+if (sLoError == null && sHiError == null)
+   if (range is empty)
+      senRangeError = ...;
+
+And something comparable for the dates and the corporation names,
+then you execute the query exactly when all the error message
+strings are null, otherwise you should print the non-null ones,
+one per line, in the order
+
+sLoError
+sHiError
+senRangeError
+cLoError
+cHiError
+corpRangeError
+dLoError
+dHiError
+dateRangeError
+
+Since you only check the range error when the two inputs are
+legit, there could at most be six non-null messages.
+
+To avoid all penalties you need to
+
+1. provide the user with an understandable vehicle to 
+   enter the six data values
+
+2. deliver the data to the server and do server side
+   validation, issuing the appropriate slate of error
+   messages for invalid input
+
+3. if the input values are legit, use a PreparedStatement
+   to carry out the query, which should be correct
+
+4. display the results in a table with labeled columns
+   in a reasonable format
+
+5. provide a link back to the entry page so the user can
+   issue more than one query conveniently
+
+In the past, students have used faulty tests for valid dates.
+Some Javascript constructors will take an invalid date input and just
+advance the day.  For example, '2000-12-35' would convert to
+'2001-01-04'.  The obvious way to proceed is to extract the 
+digits, convert them to integers, and then do the appropriate
+range tests and test for leap years.
+
+There may be tools out there you can use to help, but the performance
+of your program must be to this specification to avoid penalties.
+
+It is not hard to do the validation yourself by
+
+1. checking for parameter presence by seeing if the getRequestParameter 
+call returns null or not
+
+2. using a Pattern to see if the input string matches the
+needed format
+
+3. convering the date fields to int's and checking them for 
+ranges and legitimacy
+
+The java.sql.Date static valueOf method can be used to create a
+valid java.sql.Date object to give to the PreparedStatement, if
+the string input passes the validation tests.  It is unreliable,
+however, to test for the validity of the date as a date, as
+is described in testSQLDate.java.
+
+When you have completed your solution, deploy it in your public_www,
+make the files publicly readable, and also submit them to Blackboard.
+The names you choose for the entry page should make it clear that
+it is the initial target.  Make sure your database is in the state
+it is left in by the SQL script that creates it so that I can
+test your implementation.
+
+One other note: in the past students have sometimes used the
+POST method to avoid doing server side validation.  This does not
+prevent a determined individual from circumventing any client 
+side testing you do, which is why we require that you test input
+validity on the server side.  It's no harder to do it there than
+on the client side, so do it there to avoid being penalized.
