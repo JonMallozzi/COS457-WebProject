@@ -126,12 +126,12 @@
         errorMessages.add("<b>High limit of the corporation name range is missing.<b> <br/>");
         corpError = true;
     }else{
-        if(!(lcnm.trim().length() > 0) || !(lcnm.matches("[a-zA-Z].*?[a-zA-Z]"))){
+        if(!(lcnm.trim().length() > 0) || !(lcnm.matches("((&\\s)?[a-zA-Z]+[,.]?\\s?)*&?[a-zA-Z]+[,.]?"))){
             errorMessages.add("<b>Low limit of the corporation name range is wrong format.<b> <br/>");
             corpError = true;
         }
 
-        if(!(hcnm.trim().length() > 0) || !(hcnm.matches("[a-zA-Z].*?[a-zA-Z]"))){
+        if(!(hcnm.trim().length() > 0) || !(hcnm.matches("((&\\s)?[a-zA-Z]+[,.]?\\s?)*&?[a-zA-Z]+[,.]?"))){
             errorMessages.add("<b>High limit of the corporation name range is wrong format.<b> <br/>");
             corpError = true;
         }
