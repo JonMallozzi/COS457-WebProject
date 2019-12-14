@@ -24,19 +24,19 @@ import java.sql.Date;
 
 public class testSQLDate{
 
-   private static Scanner stdIn = new Scanner(System.in);
+   //private static Scanner stdIn = new Scanner(System.in);
 
    public static void main(String[] a){
 
 
       String s  = null;
 
-      System.out.println("Enter strings to pass on to java.sql.Date.valueOf, or ^Z to quit.");
+     // System.out.println("Enter strings to pass on to java.sql.Date.valueOf, or ^Z to quit.");
 
       java.sql.Date dt;
       
-      while (stdIn.hasNext()){
-         s = stdIn.next();
+      //while (stdIn.hasNext()){
+         s = "1999-11-11";
 
          dt = null;
 
@@ -54,9 +54,9 @@ public class testSQLDate{
             System.out.println("conversion was unsuccessful. message is " + e.getMessage());
             e.printStackTrace();
          }
-      }
+      //}
       // try values for  months from 00 to 13
-      char[]
+      /*char[]
       year = { '0','0','0','0', '-'},
       mnth = { '0', '0', '-'},
       dy = { '0', '1'};
@@ -89,7 +89,8 @@ public class testSQLDate{
             mnth[0] = '1';
             mnth[1] = '0';
          }
-      }
+      }// try values for  months from 00 to 13
+      
             
       mnth[0] = '0';
       mnth[1] = '1';
@@ -217,10 +218,12 @@ public class testSQLDate{
             }
          }
          
-      System.out.println("Exceptions thrown = " + exceptionCount);
+      System.out.println("Exceptions thrown = " + exceptionCount);*/
+
+      System.out.println(dt);
                
    }
    
 }
 
- 
+  

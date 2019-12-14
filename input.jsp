@@ -49,13 +49,27 @@
     String passwd = "password123";
 %>
 
-<form method="get" action="testServletQuery"> 
+<form method="get" action="results.jsp"> 
+
+        Low Bound for Senators:
+        <input type="text" name="loSname" size="32"></input><br/>
+
+        High Bound for Senators:
+        <input type="text" name="hiSname" size="32"></input><br/>
 
          Low Bound for Corporation:
          <input type="text" name="loCname" size="32"></input><br/>
 
          High Bound for Corporation:
          <input type="text" name="hiCname" size="32"></input><br/>
+
+         Low Bound for Date:
+         <input type="text" name="loDate" size="32"></input><br/>
+
+         High Bound for Date:
+         <input type="text" name="hiDate" size="32"></input><br/>
+
+         <input type="submit" value="Submit Query Parameters" ></input>
 
 </form>
 
@@ -116,6 +130,6 @@
 %>
 </table>
 <!--- change this too -->
-<a href="/~<username>">Return to my website</a>
+<a href="/~mallozzi">Return to my website</a>
 </body>
 </html>
